@@ -6,17 +6,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/Celina-Shrestha-LEAP/jenkins-demo.git']],
+                    gitTool: 'Default'
+                )
             }
         }
         stage('Build') {
             steps {
-                sh 'mvn -B clean package'
+                dir(starter){
+                    sh 'mvn -B clean package'
+                }
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn -B test'
+                dir(starter){
+                    sh 'mvn -B test'
+                }
+                
             }
             post {
                 always {
